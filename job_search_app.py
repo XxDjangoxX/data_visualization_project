@@ -24,6 +24,7 @@ def load_data():
 # Load
 try:
     df_final = load_data()
+
 except Exception as e:
     st.error(f"Error loading files: {e}")
     st.stop()
@@ -155,15 +156,15 @@ with tab2:
     st.subheader("Salary Distribution by Career Level")
     try:
         df_final['salary_cleaned'] = pd.to_numeric(df_final['salary_cleaned'], errors='coerce')
-        salary_df = df_final.dropna(subset=['salary_cleaned', 'career_level'])
+        salary_df = df_final.dropna(subset=['salary_cleaned', 'career_level_nlp'])
 
         fig3 = px.box(
             salary_df,
-            x='career_level',
+            x='career_level_nlp',
             y='salary_cleaned',
-            color='career_level',
+            color='career_level_nlp',
             title='Salary Distribution across Career Levels',
-            labels={'career_level': 'Career Level', 'salary_cleaned': 'Salary (USD)'},
+            labels={'career_level_nlp': 'Career Level', 'salary_cleaned': 'Salary (USD)'},
             color_discrete_sequence=px.colors.qualitative.Set2
         )
         fig3.update_layout(template='plotly_white', height=600, width=800)
