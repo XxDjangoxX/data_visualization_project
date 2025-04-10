@@ -21,17 +21,9 @@ st.set_page_config(
 def load_data():
     return pd.read_pickle('final_df.pkl')
 
-@st.cache_resource
-def load_model_and_vectorizer():
-    model = joblib.load('final_xgboost_model.pkl')
-    vectorizer = joblib.load('tfidf_vectorizer.pkl')
-    label_encoder = joblib.load('label_encoder.pkl')
-    return model, vectorizer, label_encoder
-
 # Load
 try:
     df_final = load_data()
-    model, vectorizer, label_encoder = load_model_and_vectorizer()
 except Exception as e:
     st.error(f"Error loading files: {e}")
     st.stop()
@@ -48,26 +40,6 @@ tab1, tab2 = st.tabs(["🔎 Job Search", "📊 Insights"])
 # 🔎 Job Search Tab
 # -------------------------------
 with tab1:
-    st.subheader("🔮 Smart Job Category Suggestion")
-
-    user_skills_input = st.text_input(
-        "Enter your skills (comma separated, e.g., Python, SQL, Excel):",
-        key="smart_predictor"
-    )
-
-    if user_skills_input:
-        clean_input = user_skills_input.lower().strip()
-
-        try:
-            user_skills_vectorized = vectorizer.transform([clean_input])
-            predicted_label_num = model.predict(user_skills_vectorized)[0]
-            predicted_category = label_encoder.inverse_transform([predicted_label_num])[0]
-            st.success(f"Suggested Job Category: **{predicted_category}**")
-        except Exception as e:
-            st.error(f"Prediction error: {e}")
-
-    st.markdown("---")
-
     # --- Sidebar Toggle ---
     show_sidebar = st.checkbox("🔎 Show Advanced Filters")
 
